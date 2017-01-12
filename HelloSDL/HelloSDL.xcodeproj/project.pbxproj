@@ -16,6 +16,7 @@
 		7C2D5AF81BC31598002FE9CE /* LockScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D5AF71BC31598002FE9CE /* LockScreenViewController.m */; };
 		7C2D5AFC1BC31D21002FE9CE /* HSDLProxyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D5AFB1BC31D21002FE9CE /* HSDLProxyManager.m */; };
 		8A7C7C80D460922944D23A54 /* Pods_HelloSDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 074A37D1F9B20833116BBEF5 /* Pods_HelloSDL.framework */; };
+		C129A4001E27E47500B763C6 /* HSDLHMIBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = C129A3FF1E27E47500B763C6 /* HSDLHMIBuilder.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,8 @@
 		7C2D5AF71BC31598002FE9CE /* LockScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LockScreenViewController.m; sourceTree = "<group>"; };
 		7C2D5AFA1BC31D19002FE9CE /* HSDLProxyManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSDLProxyManager.h; sourceTree = "<group>"; };
 		7C2D5AFB1BC31D21002FE9CE /* HSDLProxyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HSDLProxyManager.m; sourceTree = "<group>"; };
+		C129A3FE1E27E47500B763C6 /* HSDLHMIBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSDLHMIBuilder.h; sourceTree = "<group>"; };
+		C129A3FF1E27E47500B763C6 /* HSDLHMIBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HSDLHMIBuilder.m; sourceTree = "<group>"; };
 		EA6FE6BBC480F182B76FDA7E /* Pods-HelloSDL.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HelloSDL.release.xcconfig"; path = "../Pods/Target Support Files/Pods-HelloSDL/Pods-HelloSDL.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -108,6 +111,8 @@
 			children = (
 				7C2D5AFA1BC31D19002FE9CE /* HSDLProxyManager.h */,
 				7C2D5AFB1BC31D21002FE9CE /* HSDLProxyManager.m */,
+				C129A3FE1E27E47500B763C6 /* HSDLHMIBuilder.h */,
+				C129A3FF1E27E47500B763C6 /* HSDLHMIBuilder.m */,
 			);
 			name = SDL;
 			sourceTree = "<group>";
@@ -136,12 +141,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7C2D5AF21BC30F4C002FE9CE /* Build configuration list for PBXNativeTarget "HelloSDL" */;
 			buildPhases = (
-				F52FFD3D9E08D9D00B4E16EB /* Check Pods Manifest.lock */,
+				F52FFD3D9E08D9D00B4E16EB /* 📦 Check Pods Manifest.lock */,
 				7C2D5AD71BC30F4C002FE9CE /* Sources */,
 				7C2D5AD81BC30F4C002FE9CE /* Frameworks */,
 				7C2D5AD91BC30F4C002FE9CE /* Resources */,
-				A0740FA58A69D01AA7CEA3C1 /* Copy Pods Resources */,
-				7E162C4F74E86FF662138698 /* Embed Pods Frameworks */,
+				A0740FA58A69D01AA7CEA3C1 /* 📦 Copy Pods Resources */,
+				7E162C4F74E86FF662138698 /* 📦 Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -163,6 +168,7 @@
 				TargetAttributes = {
 					7C2D5ADA1BC30F4C002FE9CE = {
 						CreatedOnToolsVersion = 7.0.1;
+						DevelopmentTeam = 682P772SZT;
 					};
 				};
 			};
@@ -198,14 +204,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		7E162C4F74E86FF662138698 /* Embed Pods Frameworks */ = {
+		7E162C4F74E86FF662138698 /* 📦 Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "📦 Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -213,14 +219,14 @@
 			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-HelloSDL/Pods-HelloSDL-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A0740FA58A69D01AA7CEA3C1 /* Copy Pods Resources */ = {
+		A0740FA58A69D01AA7CEA3C1 /* 📦 Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "📦 Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -228,14 +234,14 @@
 			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-HelloSDL/Pods-HelloSDL-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F52FFD3D9E08D9D00B4E16EB /* Check Pods Manifest.lock */ = {
+		F52FFD3D9E08D9D00B4E16EB /* 📦 Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "📦 Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -253,6 +259,7 @@
 				7C2D5AE61BC30F4C002FE9CE /* ViewController.m in Sources */,
 				7C2D5AFC1BC31D21002FE9CE /* HSDLProxyManager.m in Sources */,
 				7C2D5AF81BC31598002FE9CE /* LockScreenViewController.m in Sources */,
+				C129A4001E27E47500B763C6 /* HSDLHMIBuilder.m in Sources */,
 				7C2D5AE31BC30F4C002FE9CE /* AppDelegate.m in Sources */,
 				7C2D5AE01BC30F4C002FE9CE /* main.m in Sources */,
 			);
@@ -365,6 +372,7 @@
 			baseConfigurationReference = 3898FFF53CAB300A49008B38 /* Pods-HelloSDL.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 682P772SZT;
 				INFOPLIST_FILE = HelloSDL/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ford.HelloSDL;
@@ -377,6 +385,7 @@
 			baseConfigurationReference = EA6FE6BBC480F182B76FDA7E /* Pods-HelloSDL.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 682P772SZT;
 				INFOPLIST_FILE = HelloSDL/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ford.HelloSDL;
