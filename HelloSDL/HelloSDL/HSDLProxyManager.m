@@ -10,10 +10,12 @@
 #import "HSDLProxyManager.h"
 @import SmartDeviceLink_iOS;
 
+#import "HSDLHMIBuilder.h"
+
 #warning TODO: Change these to match your app settings!!
 // TCP/IP (Emulator) configuration
-static NSString *const RemoteIpAddress = @"127.0.0.1";
-static NSString *const RemotePort = @"12345";
+static NSString *const RemoteIpAddress = @"19.56.68.113";
+static NSString *const RemotePort = @"2776";
 
 // App configuration
 static NSString *const AppName = @"HelloSDL";
@@ -27,7 +29,6 @@ static NSString *const WelcomeShow = @"Welcome to HelloSDL";
 static NSString *const WelcomeSpeak = @"Welcome to Hello S D L";
 // Sample AddCommand
 static NSString *const TestCommandName = @"Test Command";
-static const NSUInteger TestCommandID = 1;
 
 // Notifications used to show/hide lockscreen in the AppDelegate
 NSString *const HSDLDisconnectNotification = @"com.sdl.notification.sdldisconnect";
@@ -44,6 +45,8 @@ NSString *const HSDLNotificationUserInfoObject = @"com.sdl.notification.keys.sdl
 @property (nonatomic, assign, getter=isFirstHmiFull) BOOL firstHmiFull;
 @property (nonatomic, assign, getter=isFirstHmiNotNone) BOOL firstHmiNotNone;
 @property (nonatomic, assign, getter=isVehicleDataSubscribed) BOOL vehicleDataSubscribed;
+
+@property (nonatomic, strong) HSDLHMIBuilder *hmi;
 
 @end
 
@@ -102,10 +105,12 @@ NSString *const HSDLNotificationUserInfoObject = @"com.sdl.notification.keys.sdl
     NSLog(@"startProxy");
     
     // If connecting via USB (to a vehicle).
-    self.proxy = [SDLProxyFactory buildSDLProxyWithListener:self];
+//    self.proxy = [SDLProxyFactory buildSDLProxyWithListener:self];
 
     // If connecting via TCP/IP (to an emulator).
-//    self.proxy = [SDLProxyFactory buildSDLProxyWithListener:self tcpIPAddress:RemoteIpAddress tcpPort:RemotePort];
+    self.proxy = [SDLProxyFactory buildSDLProxyWithListener:self tcpIPAddress:RemoteIpAddress tcpPort:RemotePort];
+    
+    _hmi = [[HSDLHMIBuilder alloc]initWithProxy:self.proxy];
 }
 
 /**
@@ -174,7 +179,15 @@ NSString *const HSDLNotificationUserInfoObject = @"com.sdl.notification.keys.sdl
     }
     if (self.isGraphicsSupported) {
         [self hsdl_uploadImages];
+//        [self hsdl_uploadImage_jpg:@"ford" withCorrelationID:[self hsdl_getNextCorrelationId]];
     }
+    
+    //Experiment section
+    
+    [_hmi setLayout:@"TEXTBUTTONS_WITH_GRAPHIC"];
+//    [_hmi setLayout:@"TEXT_AND_SOFTBUTTONS_WITH_GRAPHIC"];
+//    
+//    [_hmi buildMainSoftButtons:[self hsdl_getNextCorrelationId] ];
 }
 
 /**
@@ -224,6 +237,38 @@ NSString *const HSDLNotificationUserInfoObject = @"com.sdl.notification.keys.sdl
     show.mainField1 = WelcomeShow;
     show.alignment = [SDLTextAlignment CENTERED];
     show.correlationID = [self hsdl_getNextCorrelationId];
+    
+//    NSMutableArray *buttonList = [[NSMutableArray alloc]init];
+//    
+//    SDLSoftButton *button = nil;
+//    
+//    button = [[SDLSoftButton alloc]init];
+//    [button setType: [SDLSoftButtonType TEXT]];
+//    [button setSoftButtonID:@(BTNID_NAME_ONE)];
+//    [button setText:@"Button One"];
+//    [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
+//    
+//    [buttonList addObject:button];
+//    
+//    button = [[SDLSoftButton alloc]init];
+//    [button setType: [SDLSoftButtonType TEXT]];
+//    [button setSoftButtonID:@(BTNID_NAME_TWO)];
+//    [button setText:@"Button Two"];
+//    [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
+//    
+//    [buttonList addObject:button];
+//    
+//    button = [[SDLSoftButton alloc]init];
+//    [button setType: [SDLSoftButtonType TEXT]];
+//    [button setSoftButtonID:@(BTNID_NAME_THREE)];
+//    [button setText:@"Button Three"];
+//    [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
+//    
+//    [buttonList addObject:button];
+//    
+//    [show setSoftButtons:buttonList];
+    [_hmi buildMainSoftButtons];
+    
     [self.proxy sendRPC:show];
 
     SDLSpeak *speak = [SDLRPCRequestFactory buildSpeakWithTTS:WelcomeSpeak correlationID:[self hsdl_getNextCorrelationId]];
@@ -311,6 +356,30 @@ NSString *const HSDLNotificationUserInfoObject = @"com.sdl.notification.keys.sdl
     }
 }
 
+// upload jpg
+
+- (void)hsdl_uploadImage_jpg:(NSString *)imageName withCorrelationID:(NSNumber *)corrId {
+    NSLog(@"hsdl_uploadImage: %@", imageName);
+    if (imageName) {
+        UIImage *pngImage = [UIImage imageNamed:IconFile];
+        if (pngImage) {
+            NSData *pngData = UIImagePNGRepresentation(pngImage);
+            if (pngData) {
+                SDLPutFile *putFile = [[SDLPutFile alloc] init];
+                putFile.syncFileName = imageName;
+                putFile.fileType = [SDLFileType GRAPHIC_JPEG];
+                putFile.persistentFile = @YES;
+                putFile.systemFile = @NO;
+                putFile.offset = @0;
+                putFile.length = [NSNumber numberWithUnsignedLong:pngData.length];
+                putFile.bulkData = pngData;
+                putFile.correlationID = corrId;
+                [self.proxy sendRPC:putFile];
+            }
+        }
+    }
+}
+
 /**
  *  Delegate method that runs when a PutFile is complete.
  */
@@ -359,7 +428,7 @@ NSString *const HSDLNotificationUserInfoObject = @"com.sdl.notification.keys.sdl
     SDLAddCommand *command = [[SDLAddCommand alloc] init];
     command.vrCommands = [NSMutableArray arrayWithObject:TestCommandName];
     command.menuParams = menuParams;
-    command.cmdID = @(TestCommandID);
+    command.cmdID = @(BTNID_TEST_CMDID);
     [self.proxy sendRPC:command];
 }
 
@@ -376,16 +445,40 @@ NSString *const HSDLNotificationUserInfoObject = @"com.sdl.notification.keys.sdl
 - (void)onOnCommand:(SDLOnCommand *)notification {
     NSLog(@"OnCommand notification from SDL");
 
-    // Handle sample command when triggered
-    if ([notification.cmdID isEqual:@(TestCommandID)]) {
-        SDLShow *show = [[SDLShow alloc] init];
-        show.mainField1 = @"Test Command";
-        show.alignment = [SDLTextAlignment CENTERED];
-        show.correlationID = [self hsdl_getNextCorrelationId];
-        [self.proxy sendRPC:show];
-
-        SDLSpeak *speak = [SDLRPCRequestFactory buildSpeakWithTTS:@"Test Command" correlationID:[self hsdl_getNextCorrelationId]];
-        [self.proxy sendRPC:speak];
+//    // Handle sample command when triggered
+//    if ([notification.cmdID isEqual:@(BTNID_TEST_CMDID)]) {
+//        SDLShow *show = [[SDLShow alloc] init];
+//        show.mainField1 = @"Test Command";
+//        show.alignment = [SDLTextAlignment CENTERED];
+//        show.correlationID = [self hsdl_getNextCorrelationId];
+//        [self.proxy sendRPC:show];
+//
+//        SDLSpeak *speak = [SDLRPCRequestFactory buildSpeakWithTTS:@"Test Command" correlationID:[self hsdl_getNextCorrelationId]];
+//        [self.proxy sendRPC:speak];
+//    }
+    
+    
+    NSInteger command = [[notification cmdID] integerValue];
+    switch (command){
+        case BTNID_TEST_CMDID:{
+            SDLShow *show = [[SDLShow alloc] init];
+            show.mainField1 = @"Test Command";
+            show.alignment = [SDLTextAlignment CENTERED];
+            show.correlationID = [self hsdl_getNextCorrelationId];
+            [self.proxy sendRPC:show];
+    
+            SDLSpeak *speak = [SDLRPCRequestFactory buildSpeakWithTTS:@"Test Command" correlationID:[self hsdl_getNextCorrelationId]];
+            [self.proxy sendRPC:speak];
+            break;
+        }
+        case BTNID_NAME_ONE:
+            
+            break;
+        case BTNID_NAME_TWO:
+            break;
+        case BTNID_NAME_THREE:
+            break;
+            
     }
 }
 
