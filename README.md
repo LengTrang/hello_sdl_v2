@@ -17,3 +17,4 @@ This XCode project acts as a reference iOS app using the 4.0.0 SDL SDK.
 4) Open the workspace "HelloSDL.xcworkspace" in XCode
 
 5) Edit the AppName, AppID, and the other app settings in the “HSDLProxyManager” class
+# Hello_SDL
