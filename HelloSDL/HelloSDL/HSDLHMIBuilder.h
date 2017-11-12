@@ -12,16 +12,16 @@
 typedef NS_ENUM(NSUInteger, FMCHmiButtonID) {
     BTNID_TEST_CMDID,
     BTNID_BACK,
-    BTNID_RYAN,
-    BTNID_ERIC,
-    BTNID_JAMES,
+    BTNID_FIRST,
+    BTNID_SECOND,
+    BTNID_THIRD,
     BTNID_RELAY,
     BTNID_OK,
     CHOICEID_CHOICE1,
     CHOICEID_CHOICE2,
     CHOICEID_CHOICE3,
     CHOICESETID_1 = 900,
-    CHOICESETID_2,
+    CHOICESETID_2 = 901,
 };
 
 @interface HSDLHMIBuilder : NSObject
@@ -33,9 +33,9 @@ typedef NS_ENUM(NSUInteger, FMCHmiButtonID) {
 -(void)buildMainSoftButtons;
 
 -(void)buildMainView;
--(void)buildJamesView;
+-(void)buildTHIRDView;
 -(void)buildRelayAlert;
--(void)buildRyanView;
+-(void)buildFIRSTView;
 -(void)buildMainMenu;
 
 @property (nonatomic, strong) SDLProxy *proxy;

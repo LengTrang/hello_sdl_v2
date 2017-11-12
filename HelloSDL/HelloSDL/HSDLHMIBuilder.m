@@ -71,24 +71,24 @@
     
     button = [[SDLSoftButton alloc]init];
     [button setType: [SDLSoftButtonType TEXT]];
-    [button setSoftButtonID:@(BTNID_RYAN)];
-    [button setText:@"Ryan"];
+    [button setSoftButtonID:@(BTNID_FIRST)];
+    [button setText:@"FIRST"];
     [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
     
     [buttonList addObject:button];
     
     button = [[SDLSoftButton alloc]init];
     [button setType: [SDLSoftButtonType TEXT]];
-    [button setSoftButtonID:@(BTNID_ERIC)];
-    [button setText:@"Eric Carter"];
+    [button setSoftButtonID:@(BTNID_SECOND)];
+    [button setText:@"SECOND"];
     [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
     
     [buttonList addObject:button];
     
     button = [[SDLSoftButton alloc]init];
     [button setType: [SDLSoftButtonType TEXT]];
-    [button setSoftButtonID:@(BTNID_JAMES)];
-    [button setText:@"James"];
+    [button setSoftButtonID:@(BTNID_THIRD)];
+    [button setText:@"THIRD"];
     [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
     
     [buttonList addObject:button];
@@ -111,7 +111,7 @@
     [self buildMainSoftButtons];
 }
 
--(void)buildJamesView{
+-(void)buildTHIRDView{
     [_proxy sendRPC:[HMIFactory buildSDL:LAYOUT dataObj:@"GRAPHIC_WITH_TEXT_AND_SOFTBUTTONS"] ];
     
     //[self setLayout:@"GRAPHIC_WITH_TEXT_AND_SOFTBUTTONS"];
@@ -140,7 +140,7 @@
         
         [show setGraphic:image];
     
-    [show setMainField1:@"James Page"];
+    [show setMainField1:@"FIRST Page"];
     
     [show setSoftButtons:buttonList];
     
@@ -169,15 +169,15 @@
     [_proxy sendRPC:alert];
 }
 
--(void)buildRyanView{
+-(void)buildFIRSTView{
     SDLInteractionMode *mode = [SDLInteractionMode MANUAL_ONLY];
     SDLPerformInteraction *performRequest = [[SDLPerformInteraction alloc] init];
-    [performRequest setInitialText:@"Ryan Apple Devices"];
+    [performRequest setInitialText:@"Apple Devices"];
     [performRequest setInteractionChoiceSetIDList:[NSMutableArray
-                                            arrayWithObjects:@(CHOICESETID_1),nil]];
+                                            arrayWithObject:@(100)]];
     [performRequest setInteractionMode:(mode ? mode : [SDLInteractionMode BOTH])];
     [performRequest setInteractionLayout:[SDLLayoutMode LIST_ONLY]];
-    [performRequest setTimeout:@(1000)];
+    [performRequest setTimeout:@(6000)];
     
     [_proxy sendRPC:performRequest];
     
@@ -205,53 +205,44 @@
     [choiceList addObject:choice];
     
     [request setChoiceSet:choiceList];
-    [request setInteractionChoiceSetID:@(CHOICESETID_1)];
+    [request setInteractionChoiceSetID:@(100)];
     
     [_proxy sendRPC:request];
 }
 
 -(void)buildMainMenu{
-    
-//    SDLMenuParams *menuParams = [[SDLMenuParams alloc] init];
-//    menuParams.menuName = TestCommandName;
-//    SDLAddCommand *command = [[SDLAddCommand alloc] init];
-//    command.vrCommands = [NSMutableArray arrayWithObject:TestCommandName];
-//    command.menuParams = menuParams;
-//    command.cmdID = @(BTNID_TEST_CMDID);
-//    [self.proxy sendRPC:command];
-    
     NSMutableArray *menuList = [[NSMutableArray alloc]init];
     
     SDLAddCommand *request = nil;
     SDLMenuParams *menuParam = nil;
     
     menuParam = [[SDLMenuParams alloc]init];
-    [menuParam setMenuName:@"Ryan"];
+    [menuParam setMenuName:@"FIRST"];
     [menuParam setPosition:@(0)];
     request = [[SDLAddCommand alloc]init];
     [request setMenuParams:menuParam];
-    [request setCmdID:@(BTNID_RYAN)];
-    [request setVrCommands:[@[@"Ryan"] mutableCopy]];
+    [request setCmdID:@(BTNID_FIRST)];
+    [request setVrCommands:[@[@"FIRST"] mutableCopy]];
     
     [menuList addObject:request];
     
     menuParam = [[SDLMenuParams alloc]init];
-    [menuParam setMenuName:@"Eric"];
+    [menuParam setMenuName:@"SECOND"];
     [menuParam setPosition:@(1)];
     request = [[SDLAddCommand alloc]init];
     [request setMenuParams:menuParam];
-    [request setCmdID:@(BTNID_ERIC)];
-    [request setVrCommands:[@[@"Eric"] mutableCopy]];
+    [request setCmdID:@(BTNID_SECOND)];
+    [request setVrCommands:[@[@"SECOND"] mutableCopy]];
     
     [menuList addObject:request];
     
     menuParam = [[SDLMenuParams alloc]init];
-    [menuParam setMenuName:@"James"];
+    [menuParam setMenuName:@"THIRD"];
     [menuParam setPosition:@(2)];
     request = [[SDLAddCommand alloc]init];
     [request setMenuParams:menuParam];
-    [request setCmdID:@(BTNID_JAMES)];
-    [request setVrCommands:[@[@"James"] mutableCopy]];
+    [request setCmdID:@(BTNID_THIRD)];
+    [request setVrCommands:[@[@"THIRD"] mutableCopy]];
     
     [menuList addObject:request];
     
@@ -260,6 +251,59 @@
         
         [_proxy sendRPC:command];
     }
+}
+
+
+
+-(void)buildAlertCustom:(NSMutableArray *)messages buttons:(NSMutableArray *)buttonList{
+    SDLAlert *alert = [[SDLAlert alloc]init];
+
+    [alert setAlertText1: (NSString*) messages[0] ];
+    
+    if([messages count] > 1){
+        [alert setAlertText2: (NSString*) messages[1] ];
+    }
+    
+    if([messages count] > 2){
+        [alert setAlertText3: (NSString*) messages[2] ];
+    }
+    
+    [alert setSoftButtons:buttonList];
+    
+    [_proxy sendRPC:alert];
+}
+
+-(NSMutableArray *)buildSoftButtons:(NSMutableArray *)messages buttons:(NSMutableArray *)buttonIDList{
+    NSMutableArray *buttonsList = [[NSMutableArray alloc]init];
+    
+        SDLSoftButton *button = nil;
+    
+        button = [[SDLSoftButton alloc]init];
+        [button setType:[SDLSoftButtonType TEXT]];
+        [button setSoftButtonID:[NSNumber numberWithInteger:(FMCHmiButtonID)buttonIDList[0]] ];
+        [button setText:(NSString *)messages[0]];
+    
+        [buttonsList addObject:button];
+    
+        if([messages count] > 1){
+            button = [[SDLSoftButton alloc]init];
+            [button setType:[SDLSoftButtonType TEXT]];
+            [button setSoftButtonID:[NSNumber numberWithInteger:(FMCHmiButtonID)buttonIDList[1]] ];
+            [button setText:(NSString *)messages[1]];
+            
+            [buttonsList addObject:button];
+        }
+
+        if([messages count] > 2){
+            button = [[SDLSoftButton alloc]init];
+            [button setType:[SDLSoftButtonType TEXT]];
+            [button setSoftButtonID:[NSNumber numberWithInteger:(FMCHmiButtonID)buttonIDList[2]] ];
+            [button setText:(NSString *)messages[2]];
+            
+            [buttonsList addObject:button];
+        }
+    
+    return buttonsList;
 }
 
 @end

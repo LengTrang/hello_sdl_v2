@@ -14,7 +14,7 @@
 
 #warning TODO: Change these to match your app settings!!
 // TCP/IP (Emulator) configuration
-static NSString *const RemoteIpAddress = @"19.56.73.197";
+static NSString *const RemoteIpAddress = @"19.56.0.79";
 static NSString *const RemotePort = @"2776";
 
 // App configuration
@@ -105,10 +105,10 @@ NSString *const HSDLNotificationUserInfoObject = @"com.sdl.notification.keys.sdl
     NSLog(@"startProxy");
     
     // If connecting via USB (to a vehicle).
-//    self.proxy = [SDLProxyFactory buildSDLProxyWithListener:self];
+    self.proxy = [SDLProxyFactory buildSDLProxyWithListener:self];
 
     // If connecting via TCP/IP (to an emulator).
-    self.proxy = [SDLProxyFactory buildSDLProxyWithListener:self tcpIPAddress:RemoteIpAddress tcpPort:RemotePort];
+//    self.proxy = [SDLProxyFactory buildSDLProxyWithListener:self tcpIPAddress:RemoteIpAddress tcpPort:RemotePort];
     
     _hmi = [[HSDLHMIBuilder alloc]initWithProxy:self.proxy];
 }
@@ -423,17 +423,31 @@ NSString *const HSDLNotificationUserInfoObject = @"com.sdl.notification.keys.sdl
  */
 - (void)onOnCommand:(SDLOnCommand *)notification {
     NSLog(@"OnCommand notification from SDL");
-
-    // Handle sample command when triggered
-    if ([notification.cmdID isEqual:@(BTNID_TEST_CMDID)]) {
-        SDLShow *show = [[SDLShow alloc] init];
-        show.mainField1 = @"Test Command";
-        show.alignment = [SDLTextAlignment CENTERED];
-        show.correlationID = [self hsdl_getNextCorrelationId];
-        [self.proxy sendRPC:show];
-
-        SDLSpeak *speak = [SDLRPCRequestFactory buildSpeakWithTTS:@"Test Command" correlationID:[self hsdl_getNextCorrelationId]];
-        [self.proxy sendRPC:speak];
+    
+    NSInteger command = [[notification cmdID] integerValue];
+    switch (command){
+        case BTNID_FIRST:
+            [_hmi buildFIRSTView];
+            break;
+        case BTNID_SECOND:
+            break;
+        case BTNID_THIRD:
+            [_hmi buildTHIRDView];
+            
+            break;
+        case BTNID_BACK:
+            [_hmi buildMainView];
+            break;
+        case BTNID_RELAY:
+            [_hmi buildRelayAlert];
+            
+            break;
+        case BTNID_OK:
+            break;
+        default:
+            [_hmi buildMainView];
+            break;
+            
     }
     
     
@@ -539,25 +553,13 @@ NSString *const HSDLNotificationUserInfoObject = @"com.sdl.notification.keys.sdl
     
     NSUInteger command = [[notification customButtonID] unsignedIntegerValue];
     switch (command){
-        case BTNID_TEST_CMDID:{
-            SDLShow *show = [[SDLShow alloc] init];
-            show.mainField1 = @"Test Command";
-            show.alignment = [SDLTextAlignment CENTERED];
-            show.correlationID = [self hsdl_getNextCorrelationId];
-            
-            [self.proxy sendRPC:show];
-            
-            SDLSpeak *speak = [SDLRPCRequestFactory buildSpeakWithTTS:@"Test Command" correlationID:[self hsdl_getNextCorrelationId]];
-            [self.proxy sendRPC:speak];
+        case BTNID_FIRST:
+            [_hmi buildFIRSTView];
             break;
-        }
-        case BTNID_RYAN:
-            [_hmi buildRyanView];
+        case BTNID_SECOND:
             break;
-        case BTNID_ERIC:
-            break;
-        case BTNID_JAMES:
-            [_hmi buildJamesView];
+        case BTNID_THIRD:
+            [_hmi buildTHIRDView];
             
             break;
         case BTNID_BACK:
